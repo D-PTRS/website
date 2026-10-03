@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fully Bricked – handbuilt LEGO models</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--paper:#141414;--band:#1e1e1e;--panel:#262626;--ink:#f2f2f2;--muted:#a8a8a8;--accent:#ffd21a;--on-accent:#1a1400;--focus:#ffd21a;--line:#3a3a3a;--r1:#ff5c66;--r2:#e03b46;--r3:#b82733;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font:700 1.0625rem/1.6 "Rubik",system-ui,sans-serif}
+button,input,select{font:inherit}
+h1,h2,h3,.cn{font-family:"Rubik",system-ui,sans-serif}
+h1,h2,h3{font-weight:700;letter-spacing:-.01em;line-height:1.05;margin:0}
+a{color:var(--ink)}
+.btn{display:inline-block;padding:12px 26px;border-radius:10px;font:700 1rem "Rubik",system-ui,sans-serif;text-decoration:none;border:2px solid var(--accent);background:var(--accent);color:var(--on-accent);cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn.sm{padding:8px 16px;font-size:.95rem}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px}
+.wrap.wide{max-width:1000px}
+.hero{position:sticky;top:0;height:100svh;z-index:0;opacity:calc(1 - var(--p,0)*.9);transform:scale(calc(1 - var(--p,0)*.06));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px;padding:48px 20px 96px}
+.hero svg{width:min(260px,62vw);height:auto}
+.hero h1{font-size:clamp(2.6rem,8vw,4.5rem)}
+.hero p{margin:0;color:var(--muted);font-size:1.15rem}
+.hero .row{justify-content:center;margin-top:10px}
+.t{fill:var(--r1)}.l{fill:var(--r2)}.r{fill:var(--r3)}
+section{position:relative;z-index:1;padding:clamp(88px,14vw,150px) 0}
+#market{background:var(--paper)}
+#contact{background:var(--band)}
+#models{background:var(--band);box-shadow:0 -18px 40px rgba(0,0,0,.2)}
+section h2{font-size:clamp(2rem,5vw,3rem);margin-bottom:16px}
+.lead{color:var(--muted);margin:0 0 40px;max-width:46ch}
+/* catalogue */
+.tools{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.tools input,.tools select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tools input{flex:1 1 220px;min-width:0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.chip{border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 16px;font:700 .95rem "Rubik",system-ui,sans-serif;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:700}
+.count{color:var(--muted);font-size:.95rem;margin:0 0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:20px}
+.card{display:flex;flex-direction:column;gap:6px;padding:12px 12px 16px;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;color:var(--ink);cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.16)}
+.thumb{display:block;aspect-ratio:1/1;background:var(--band);border-radius:10px;padding:10px}
+.thumb svg{width:100%;height:100%;display:block}
+.cn{font-weight:700;font-size:1.05rem;line-height:1.15;padding:4px 4px 0}
+.cp{color:var(--muted);padding:0 4px;font-weight:700}
+.empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:40px 0}
+.more{text-align:center;margin-top:36px}
+.more[hidden]{display:none}
+/* popup */
+dialog{width:min(92vw,560px);max-height:92svh;overflow:auto;padding:0;border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(20,12,8,.55)}
+dialog[open]{animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}}
+.inner{padding:22px 22px 24px}
+.dh{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+.dh h3{font-size:1.6rem}
+.x{flex:none;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:1.1rem;cursor:pointer}
+.view{aspect-ratio:4/3;border-radius:12px;background:var(--band);cursor:grab;touch-action:pan-y}
+.view:active{cursor:grabbing}
+.view canvas{display:block;width:100%;height:100%;border-radius:12px}
+.meta{display:flex;flex-wrap:wrap;gap:12px 14px;align-items:center;margin:16px 0 10px}
+#cp{margin-left:auto}
+.meta b{font:700 1.4rem "Rubik",system-ui,sans-serif}
+.meta span{color:var(--muted)}
+#dd{margin:0 0 20px;color:var(--muted)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nav span{color:var(--muted);font-size:.95rem}
+/* find */
+.facts{display:grid;grid-template-columns:auto 1fr;gap:18px 32px;margin:0 0 48px}
+.facts dt{font-weight:700}.facts dd{margin:0;color:var(--muted)}
+footer{position:relative;z-index:1;background:var(--paper);padding:40px 20px 56px;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
+footer p{margin:0 0 12px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:8px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card{transition:none}dialog[open]{animation:none}.hero{opacity:1!important;transform:none!important}}
+.faq{margin-top:72px}
+.faq h3{font-size:1.6rem;margin-bottom:16px}
+.faq details{border-bottom:1px solid var(--line)}
+.faq details:first-of-type{border-top:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:1.5rem;line-height:1;color:var(--accent)}
+.faq details[open] summary::after{content:"\2013"}
+.faq details p{margin:0 0 20px;color:var(--muted);max-width:56ch}
+.cd{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin:0 0 48px}
+.cd[hidden]{display:none}
+.brk{--c:var(--r2);position:relative;display:flex;flex-direction:column;align-items:center;min-width:104px;padding:18px 16px 12px;margin-top:8px;background:var(--c);color:#fff;border-radius:8px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.2);line-height:1}
+.brk.y{--c:var(--accent);color:var(--on-accent)}
+.brk::before,.brk::after{content:"";position:absolute;top:-8px;width:22px;height:9px;background:var(--c);border-radius:5px 5px 0 0}
+.brk::before{left:18%}.brk::after{right:18%}
+.brk b{font-size:2.6rem}
+.brk span{font-size:.8rem;margin-top:8px}
+.cd p{margin:0;color:var(--muted)}
+.cd.now .brk{display:none}
+.cd.now p{color:var(--ink);font-size:1.3rem}
+</style>
+</head>
+<body>
+<main>
+  <div class="hero" id="top">
+    <svg viewBox="30 25 180 170" role="img" aria-label="A 2 by 2 LEGO brick">
+      <defs><g id="s"><ellipse rx="16" ry="8" class="l"/><rect x="-16" y="-14" width="32" height="14" class="l"/><ellipse rx="16" ry="8" cy="-14" class="t"/></g></defs>
+      <polygon points="120,40 200,80 120,120 40,80" class="t"/>
+      <polygon points="40,80 120,120 120,180 40,140" class="l"/>
+      <polygon points="120,120 200,80 200,140 120,180" class="r"/>
+      <use href="#s" x="120" y="60"/><use href="#s" x="160" y="80"/><use href="#s" x="80" y="80"/><use href="#s" x="120" y="100"/>
+    </svg>
+    <h1>Fully Bricked</h1>
+    <p>Handbuilt LEGO® models.</p>
+    <div class="row"><a class="btn" href="#models">See the models</a><a class="btn alt" href="#market">Market info</a></div>
+  </div>
+
+  <section id="models">
+    <div class="wrap wide">
+      <h2>Models</h2>
+      <p class="lead">Tap a model to see it in 3D.</p>
+      <div class="tools">
+        <input id="q" type="search" placeholder="Search models" aria-label="Search models">
+        <select id="sort" aria-label="Sort models"><option value="az">Name: A to Z</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option></select>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Categories"></div>
+      <p class="count" id="count" aria-live="polite"></p>
+      <div class="grid" id="grid"></div>
+      <div class="more"><button class="btn alt" id="more" hidden>Show more</button></div>
+    </div>
+  </section>
+
+  <section id="market">
+    <div class="wrap">
+      <h2>Market info</h2>
+      <p class="lead">We sell in person at the school business market.</p>
+      <div class="cd" id="cd" role="timer" aria-label="Time until the market" hidden>
+        <div class="brk"><b id="cdd">0</b><span>days</span></div>
+        <div class="brk y"><b id="cdh">0</b><span>hours</span></div>
+        <p id="cdt">until the market</p>
+      </div>
+      <dl class="facts" style="margin-bottom:0">
+        <dt>When</dt><dd>1 December 2026 [add start time]</dd>
+        <dt>Where</dt><dd>[Add stall number or location]</dd>
+        <dt>Pre-orders</dt><dd>[Add how to reserve a model]</dd>
+      </dl>
+      <div class="faq">
+        <h3>FAQ</h3>
+        <details><summary>How do I buy a model?</summary><p>Come to our stall at the school business market. The date, time and location are listed above.</p></details>
+        <details><summary>Are the models the same as the ones shown here?</summary><p>Colours may vary slightly</p></details>
+        <details><summary>Can I order a custom model?</summary><p>No! 😡</p></details>
+        <details><summary>How can I pay?</summary><p>[Add accepted payment methods]</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <h2>Contact us</h2>
+      <p class="lead">Questions, or want a custom model? Get in touch.</p>
+      <div class="row"><a class="btn" href="mailto:hello@example.com">Email us</a><a class="btn alt" href="#">Instagram: @yourhandle</a></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <p>Independent business. Not affiliated with or endorsed by the LEGO Group. LEGO® is a trademark of the LEGO Group.</p>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dn">
+  <div class="inner">
+    <div class="dh"><h3 id="dn"></h3><button class="x" id="dx" aria-label="Close">✕</button></div>
+    <div class="view" id="view" tabindex="0" role="img" aria-label="Interactive 3D model. Drag, or use the left and right arrow keys, to spin it."></div>
+    <div class="meta"><b id="dp"></b><span id="dc"></span><button class="btn alt sm" id="cp" aria-live="polite">Copy link</button></div>
+    <p id="dd"></p>
+    <div class="nav"><button class="btn alt sm" id="prev">Previous</button><span id="pos"></span><button class="btn alt sm" id="next">Next</button></div>
+  </div>
+</dialog>
+
+<script>
+/* ===== MODEL DATA: one line per model: [name, size (Small, Medium or Large), price in €, description] ===== */
+var MODELS=[
+ ['Cube Norris','Medium',12,'Cannot be defeated, only rotated. Extremely square.'],
+ ['Boxy McBoxface','Small',8,'A box that refuses to be called anything else.'],
+ ['Sir Squares-a-Lot','Small',6,'Knighted for services to right angles.'],
+ ['Duke of Cuboid','Large',16,'Rules over the desk with six equal faces.'],
+ ['Lady Right-Angle','Medium',10,'Always correct, never obtuse.'],
+ ['The Cubist','Medium',9,'Sees every side of the story.'],
+ ['Block Party','Small',7,'Brings the studs. Does not bring snacks.'],
+ ['Dave the Cube','Small',5,'Just Dave. Very reliable.'],
+ ['Cuboid Rex','Large',18,'Fearsome. Mostly in theory.'],
+ ['Cubert','Medium',11,'Slightly nervous, perfectly proportioned.']
+];
+/* ===== MARKET DATE: year-month-day, then T and the start time (24h, local time) ===== */
+var MARKET_DATE='2026-12-01T00:00:00';
+(function(){
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,PAGE=24;
+var hero=document.getElementById('top'),tick=false;
+if(!reduce)addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){hero.style.setProperty('--p',Math.min(scrollY/innerHeight,1));tick=false})},{passive:true});
+function $(id){return document.getElementById(id)}
+function slug(n){return n.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+var models=MODELS.map(function(m,i){return{id:slug(m[0]),name:m[0],cat:m[1],price:m[2],desc:m[3],hue:Math.floor(Math.random()*360),i:i}});
+var cats=['All','Small','Medium','Large'];
+var st={q:'',cat:'All',sort:'az',shown:PAGE};
+function thumb(h){
+  var t='hsl('+h+',62%,64%)',l='hsl('+h+',62%,50%)',r='hsl('+h+',62%,38%)';
+  function s(x,y){return '<g transform="translate('+x+' '+y+')"><ellipse rx="16" ry="8" fill="'+l+'"/><rect x="-16" y="-14" width="32" height="14" fill="'+l+'"/><ellipse rx="16" ry="8" cy="-14" fill="'+t+'"/></g>'}
+  return '<svg viewBox="30 25 180 170" aria-hidden="true"><polygon points="120,40 200,80 120,120 40,80" fill="'+t+'"/><polygon points="40,80 120,120 120,180 40,140" fill="'+l+'"/><polygon points="120,120 200,80 200,140 120,180" fill="'+r+'"/>'+s(120,60)+s(160,80)+s(80,80)+s(120,100)+'</svg>';
+}
+function view(){
+  var q=st.q.trim().toLowerCase();
+  var a=models.filter(function(m){return (st.cat==='All'||m.cat===st.cat)&&(!q||(m.name+' '+m.cat).toLowerCase().indexOf(q)>=0)});
+  if(st.sort==='lo')a.sort(function(x,y){return x.price-y.price});
+  if(st.sort==='hi')a.sort(function(x,y){return y.price-x.price});
+  if(st.sort==='az')a.sort(function(x,y){return x.name.localeCompare(y.name)});
+  return a;
+}
+function render(){
+  var a=view(),vis=a.slice(0,st.shown);
+  $('grid').innerHTML=vis.length?vis.map(function(m){
+    return '<button class="card" data-id="'+m.id+'"><span class="thumb">'+thumb(m.hue)+'</span><span class="cn">'+m.name+'</span><span class="cp">€'+m.price+'</span></button>'}).join(''):'<p class="empty">No models match that search.</p>';
+  $('count').textContent=a.length+(a.length===1?' model':' models');
+  $('more').hidden=a.length<=st.shown;
+  [].forEach.call($('chips').children,function(c){c.setAttribute('aria-pressed',c.dataset.cat===st.cat)});
+}
+cats.forEach(function(c){var b=document.createElement('button');b.className='chip';b.dataset.cat=c;b.textContent=c;$('chips').appendChild(b)});
+$('chips').addEventListener('click',function(e){var c=e.target.closest('.chip');if(c){st.cat=c.dataset.cat;st.shown=PAGE;render()}});
+$('q').addEventListener('input',function(e){st.q=e.target.value;st.shown=PAGE;render()});
+$('sort').addEventListener('change',function(e){st.sort=e.target.value;st.shown=PAGE;render()});
+$('more').addEventListener('click',function(){st.shown+=PAGE;render()});
+$('grid').addEventListener('click',function(e){var c=e.target.closest('.card');if(c)openModel(c.dataset.id)});
+/* ---- 3D ---- */
+var dlg=$('dlg'),vw=$('view'),list=[],idx=0,gl=null,raf=0,dragging=false,lx=0;
+function load(cb){
+  if(window.THREE)return cb();
+  var s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.onload=cb;
+  s.onerror=function(){vw.textContent='The 3D viewer could not load. Check your connection and try again.'};
+  document.head.appendChild(s);
+}
+function init(){
+  var r=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  r.setPixelRatio(Math.min(devicePixelRatio||1,2));
+  var sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(35,1,.1,100),holder=new THREE.Group();
+  sc.add(new THREE.AmbientLight(0xffffff,.75));
+  var d=new THREE.DirectionalLight(0xffffff,.8);d.position.set(6,12,8);sc.add(d);
+  sc.add(holder);cam.position.set(0,6.1,10.3);cam.lookAt(0,1.8,0);
+  gl={r:r,sc:sc,cam:cam,holder:holder};
+}
+function cube(h){
+  var g=new THREE.Group(),m=new THREE.MeshLambertMaterial({color:new THREE.Color('hsl('+h+',62%,55%)')});
+  for(var l=0;l<3;l++){var b=new THREE.Mesh(new THREE.BoxGeometry(3.96,1.16,3.96),m);b.position.set(0,l*1.2+.6,0);g.add(b)}
+  var sg=new THREE.CylinderGeometry(.3,.3,.2,14);
+  for(var i=0;i<4;i++)for(var j=0;j<4;j++){var s=new THREE.Mesh(sg,m);s.position.set(i-1.5,3.7,j-1.5);g.add(s)}
+  return g;
+}
+function fit(){
+  if(!gl||!dlg.open)return;
+  var w=vw.clientWidth,h=vw.clientHeight;
+  if(!w||!h)return;
+  gl.r.setSize(w,h,false);gl.cam.aspect=w/h;gl.cam.updateProjectionMatrix();
+}
+function loop(){
+  raf=requestAnimationFrame(loop);
+  if(!reduce&&!dragging)gl.holder.rotation.y+=.008;
+  gl.r.render(gl.sc,gl.cam);
+}
+function fill(){
+  var m=list[idx];
+  $('dn').textContent=m.name;$('dp').textContent='€'+m.price;$('dc').textContent=m.cat;$('dd').textContent=m.desc;
+  $('pos').textContent=(idx+1)+' of '+list.length;
+  $('prev').disabled=$('next').disabled=list.length<2;
+  vw.setAttribute('aria-label','Interactive 3D model of '+m.name+'. Drag, or use the left and right arrow keys, to spin it.');
+  try{history.replaceState(null,'','#'+m.id)}catch(e){}
+  load(function(){
+    if(!dlg.open||list[idx]!==m)return;
+    if(!gl)init();
+    while(gl.holder.children.length)gl.holder.remove(gl.holder.children[0]);
+    gl.holder.add(cube(m.hue));gl.holder.rotation.y=-.6;
+    if(gl.r.domElement.parentNode!==vw)vw.appendChild(gl.r.domElement);
+    fit();cancelAnimationFrame(raf);loop();
+  });
+}
+function openModel(id){
+  list=view();idx=list.map(function(m){return m.id}).indexOf(id);
+  if(idx<0){st.q='';st.cat='All';$('q').value='';render();list=view();idx=list.map(function(m){return m.id}).indexOf(id)}
+  if(idx<0)return;
+  if(!dlg.open)dlg.showModal();
+  fill();
+}
+var cpb=$('cp'),cpt;
+cpb.addEventListener('click',function(){
+  var url=location.href;
+  function done(ok){cpb.textContent=ok?'Link copied':'Copy failed';clearTimeout(cpt);cpt=setTimeout(function(){cpb.textContent='Copy link'},2000)}
+  function fallback(){var t=document.createElement('textarea');t.value=url;t.style.cssText='position:fixed;opacity:0';dlg.appendChild(t);t.select();var ok=false;try{ok=document.execCommand('copy')}catch(e){}t.remove();done(ok)}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(url).then(function(){done(true)},fallback);else fallback();
+});
+var MKT=new Date(MARKET_DATE),cd=$('cd');
+function tickCd(){
+  var ms=MKT-new Date();
+  if(isNaN(ms)||ms<=-864e5){cd.hidden=true;return}
+  cd.hidden=false;cd.classList.toggle('now',ms<=0);
+  $('cdt').textContent=ms>0?'until the market':"It's market day!";
+  if(ms>0){$('cdd').textContent=Math.floor(ms/864e5);$('cdh').textContent=Math.floor(ms%864e5/36e5)}
+}
+tickCd();setInterval(tickCd,60000);
+function step(d){idx=(idx+d+list.length)%list.length;fill()}
+$('prev').addEventListener('click',function(){step(-1)});
+$('next').addEventListener('click',function(){step(1)});
+$('dx').addEventListener('click',function(){dlg.close()});
+dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close()});
+dlg.addEventListener('close',function(){cancelAnimationFrame(raf);raf=0;try{history.replaceState(null,'','#models')}catch(e){}});
+if(window.ResizeObserver)new ResizeObserver(fit).observe(vw);
+vw.addEventListener('pointerdown',function(e){dragging=true;lx=e.clientX;vw.setPointerCapture(e.pointerId)});
+vw.addEventListener('pointermove',function(e){if(dragging&&gl){gl.holder.rotation.y+=(e.clientX-lx)*.01;lx=e.clientX}});
+['pointerup','pointercancel'].forEach(function(t){vw.addEventListener(t,function(){dragging=false})});
+vw.addEventListener('keydown',function(e){
+  if(!gl)return;
+  if(e.key==='ArrowLeft'){gl.holder.rotation.y-=.2;e.preventDefault()}
+  if(e.key==='ArrowRight'){gl.holder.rotation.y+=.2;e.preventDefault()}
+});
+function fromHash(){var id=location.hash.slice(1);if(id&&models.some(function(m){return m.id===id}))openModel(id)}
+addEventListener('hashchange',fromHash);
+render();fromHash();
+})();
+</script>
+</body>
+</html>
